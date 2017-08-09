@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
     <metadata minClientVersion="2.7">
         <id>WiX.Toolset</id>
-        <version>3.10.3.3007</version>
+        <version>3.11.0.1701</version>
         <title>WiX Toolset (unofficial)</title>
         <summary>Windows Installer XML (WiX Toolset) binaries for compiling setup projects.</summary>
         <description>This package contains the binaries needed to compile Windows Installer XML (WiX) setup projects. 
@@ -14,25 +14,106 @@
         <authors>Rob Mensching,Bob Arnson</authors>
         <owners>hkrug</owners>
         <projectUrl>https://github.com/hkrug/WiX.Toolset.NuGet</projectUrl>
-        <licenseUrl>https://github.com/hkrug/WiX.Toolset.NuGet/blob/v3.10.3.3007/LICENSE.md</licenseUrl>
+        <licenseUrl>https://github.com/hkrug/WiX.Toolset.NuGet/blob/v3.11.0.1701/LICENSE.md</licenseUrl>
         <iconUrl>http://wixtoolset.org/Content/logo_framed.png</iconUrl>
         <requireLicenseAcceptance>false</requireLicenseAcceptance>
         <tags>WiX MSI Installer XML</tags>
         <releaseNotes>
-		WiX v3.10.3 is the latest recommended maintenance release of WiX v3.10; it contains the mitigations in WiX v3.10.2 for a serious Windows vulnerability affecting all bundles and fixes for regressions introduced with the mitigations. We strongly recommend upgrading to WiX v3.10.3 so you can ship safe bundles.
+WiX v3.11.0 is the latest recommended release of WiX (http://wixtoolset.org/).
 
-For more information about the vulnerabilities and mitigations, see WiX v3.10.2 released (https://www.firegiant.com/blog/2016/1/20/wix-v3.10.2-released/).
+For more information about the release, see WiX v3.11 released (http://robmensching.com/blog/posts/2017/5/5/wix-toolset-v3.11-released/).
 
-The following bugs were fixed:
+Changes
+Visual Studio 2017 and MSBuild v15
 
-    layout: Default directory broken with clean room implementation. #5193 with fix by @jchoover
-    WiX 3.10.1 failing to update to 3.10.2 #5234 with fix by @rseanhall
-    New bootstrapper fails to run when performing an UpdateReplace #5238 with fix by @rseanhall
-    System.ArgumentException: Font '?' cannot be found. In the BootstapperApplication #5282 with fix by @robmen
-    Layout to custom directory doesn't copy bundle payload #5277 with fix by @res2k
-    Regression in attached container issues in clean room #5301 with fix by @rseanhall
-    Extra argument in burn command line #5302 with fix by @rseanhall
-    Custom burn application throws exception when accessing .NET dll when uninstalling #5308 with fix by @rseanhall
+    barnson added support for building WiX with Visual Studio 2017 per issue 5484.
+    robmen moved Votive from WiX to .vsix packages and its own repo.
+    robmen updated the WiX MSBuild tasks and targets to work with the new isolated MSBuild v15 in Visual Studio 2017.
+    heaths added support for detecting Visual Studio 2017.
+    barnson fixed bug 5535 by ensuring TargetPath project reference variables don't get multiple identical items due to a change in Visual Studio 2017.
+    barnson fixed bug 5537 by ensuring TargetDir project reference variables end in a backslash due to a change in Visual Studio 2017.
+
+Burn and WixStandardBootstrapperApplication
+
+    rickpmartin made the WixMbaPrereqLicenseUrl variable in WixNetFxExtension overridable.
+    rseanhall fixed bug 4810 by ensuring the pre-req mode of WixStdBA only handles installation and help.
+    hshiozawa formatted LaunchWorkingFolder in WixStdBA per the documentation.
+    aleksandr-grechko fixed bug 4094 in WixStdBA to slightly better support MSI packages with DisplayInternalUI="yes".
+    barnson fixed bug 4876 to keep Burn running on really old hardware.
+    barnson fixed bug 5318 by updating a null check in Burn.
+    jchoover fixed bug 4943 to support per-user bundle updates.
+    barnson fixed bug 4933 by adding an optional loc string for Windows XP users in WixStdBA.
+    robmen fixed bug 5307 by correctly setting SystemFolder and System64Folder Burn variables.
+    BMurri fixed bug 4499 by adding support for UI languages to WixStdBA.
+    BMurri implemented issue 5285 to add a built-in UserUILanguageID variable to Burn.
+    rseanhall fixed bug 5435 by letting a bootstrapper application load DLLs from its own directory.
+    rseanhall fixed bug 5512 by applying some COM interop goo to IBootstrapperApplication.OnDetectCompatiblePackage.
+    rseanhall fixed bug 5521 by adding Microsoft.Tools.WindowsInstallerXml.Bootstrapper.ErrorType.Apply.
+
+Extensions and custom actions
+
+    phillHgl fixed bug 5331 by fixing the ConfigureSmbUninstall custom action to handle file share descriptions larger than 72 characters.
+    nathan-alden added support for .NET Framework 4.6.2, as requested (by nathan-alden no less) in issue 5370.
+    nirbar fixed bug 5217 by fixing the ConfigureUsers custom action's error checking.
+    barnson fixed the CreateUser custom action's error checking.
+    fyodorkor fixed bug 4956 by hiding custom action data that could contain sensitive data.
+    jabo2 added support for icons in WixUtilExtension's InternetShortcut.
+    barnson fixed bug 5522 by making WixUtilExtension's InternetShortcut icons optional, implementing the custom action, and adding a shortcut to wixtoolset.org so we always have a way of testing it all.
+
+WiX native and managed SDKs
+
+    barnson taught the DUtil function FileVersionFromStringEx to handle "vVersion" syntax.
+    jchoover fixed bug 5334 by having the DUtil function BundleEnumRelatedBundle return the bundle id rather than the bundle provider key.
+    rseanhall fixed bug 4929 by adding a limited number of retries when a log file can't be created in Burn (or any code using the DUtil PathCreateTimeBasedTempFile function).
+
+Core toolset
+
+    barnson fixed bug 5294 by adding a warning when reserved properties are used.
+    barnson fixed bug 5306 by adding a warning when ServiceConfig is used.
+    robmen fixed bug 4797 by blocking reserved file names.
+    robmen fixed bugs 4812 and 4813 by properly modularizing columns in WixIisExtension tables.
+    robmen fixed bug 5270 by making nullable columns nullable.
+    robmen fixed bug 5438 by correcting a typo.
+    woachk and rseanhall fixed the broken-because-we-don't-build-it ARM build.
+    robmen fixed bug 5265 by adding warnings when payloads try to "escape" their cache locations.
+
+Heat
+
+    apmorton fixed bug 4335 in Heat's project harvester.
+    sjswoboda fixed bug 5457 in Heat's performance category harvester.
+
+Visual Studio Extension
+
+    ddv239 fixed bug 5444 in Votive.
+
+Localization
+
+    piccoloaiutante added an Italian translation for strings in WixUtilExtension.
+    sGeeK44 added French and Spanish translations for strings in WixUtilExtension.
+    zakred added a Spanish translation for strings in WixFirewallExtension.
+    MarcSchaetz added a German translation for strings in WixSqlExtension.
+    ujdhesa contributed an Albanian translation for WixUIExtension.
+
+Documentation
+
+    MichaWiedenmann fixed bug 5210 by cleaning up WixNetFxExtension documentation.
+    Daniel15 did some cleanup on WiX how-to documentation.
+    NPatch added documentation for the Insignia MSBuild task.
+    barnson fixed some how-to documentation per bug 4869.
+    barnson added version numbers to some documentation to clarify in which versions of WiX some functionality was introduced.
+    Tiberriver256 fixed bug 5552 by correcting a typo in a how-to.
+
+WiX bundle and bootstrapper application
+
+    jchoover fixed bug 4847 by adding status information to the WiX bootstrapper application.
+    barnson fixed bug 5474 by adding license.txt to the binaries .zip.
+    barnson updated the splash screen for the WiX bundle.
+    barnson fixed the WiX bundle's detection of the .NET 3.5.1 prerequisite.
+    rseanhall fixed the WiX bootstrapper application so you don't need two clicks when one should suffice.
+    barnson fixed bug 5527 by adding UI support in the WiX bootstrapper application for layout mode.
+    rseanhall implemented issue 5510 by adding a hyperlink to the WiX bundle bootstrapper application.
+    barnson fixed bug 5538 by adding the native SDK for Visual Studio 2017 to the WiX bundle.
+
         </releaseNotes>
     </metadata>
 </package>
