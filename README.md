@@ -8,7 +8,7 @@ The files are taken from the ZIP distribution of the WiX Toolset releases (http:
 
 Feel free to file an issue here on GitHub in case you have problems using the package.
 
-**Release 3.11.0
+### Release 3.11.0
 
 Package 3.11.0 contains the WiX v3.11.0 binaries from official release.
 
